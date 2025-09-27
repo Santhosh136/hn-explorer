@@ -1,11 +1,53 @@
 import streamlit as st
 import requests
 
-st.title("🔥 AI-Powered Hacker News Reader")
+st.set_page_config(page_title="Hacker News Explorer", layout="wide")
+st.title("📰 Hacker News Explorer")
 
-resp = requests.get("http://localhost:8000/top-stories")
-stories = resp.json().get("stories", [])
+# Tabs for different workflows
+tab1, tab2, tab3 = st.tabs(["🔥 Best stories", "🆕 New Stories", "💼 Jobs"])
 
-for s in stories:
-    st.subheader(s["title"])
-    st.write(f"🔗 [Link]({s['url']}) | 👍 {s['points']} | 👤 {s['author']}")
+API_BASE = "http://localhost:8000"  # FastAPI base URL
+
+
+def fetch_and_display_stories(story_type, title, error_msg):
+    """
+    Fetch stories from API and display them in Streamlit.
+
+    Args:
+        story_type (str): API endpoint suffix (e.g., 'beststories')
+        title (str): Display title for the section
+        error_msg (str): Error message if fetch fails
+    """
+    st.subheader(title)
+    try:
+        response = requests.get(f"{API_BASE}/stories/{story_type}")
+        if not response.ok:
+            st.error(error_msg)
+            return
+
+        stories = response.json().get("stories", [])
+
+        if not stories:
+            st.info("No stories available")
+            return
+
+        for story in stories:
+            st.markdown(f"**[{story['title']}]({story['url']}) by {story['author']}**")
+
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
+# Story configurations
+story_configs = [
+    ("beststories", "🚀 Best 10 Stories", "Failed to fetch Best stories"),
+    ("newstories", "🆕 New 10 Stories", "Failed to fetch new stories"),
+    ("jobstories", "💼 Job 10 Stories", "Failed to fetch job stories"),
+]
+
+# Display stories in tabs
+tabs = [tab1, tab2, tab3]
+for tab, (story_type, title, error_msg) in zip(tabs, story_configs):
+    with tab:
+        fetch_and_display_stories(story_type, title, error_msg)
