@@ -8,21 +8,21 @@ app = FastAPI()
 logger = getLogger(__name__)
 
 
-@app.get("/top-stories")
-async def get_top_stories():
+@app.get("/stories/{story_type}")
+async def get_stories(story_type: str):
     try:
-        logger.info("Fetching top stories")
+        logger.info(f"Fetching {story_type} stories")
         # fetch data from SQLite database and return
-        top_stories = execute_query(
-            "SELECT title, author, url, points, comments, timestamp FROM stories ORDER BY points DESC LIMIT 10"
+        stories = execute_query(
+            f"SELECT title, author, url, points, comments, timestamp FROM {story_type} ORDER BY points DESC LIMIT 10"
         )
         # FastAPI automatically handles JSON serialization for dicts/lists
-        return {"stories": top_stories}
+        return {"stories": stories}
     except Exception as e:
-        logger.error(f"Error fetching top stories: {e}")
+        logger.error(f"Error fetching {story_type} stories: {e}")
 
         return Response(
-            {"error": "Error fetching top stories"},
+            {"error": f"Error fetching {story_type} stories"},
             media_type="application/json",
             status_code=500,
         )

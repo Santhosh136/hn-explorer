@@ -7,22 +7,22 @@ import sqlite3
 import os
 
 
-def load_hacker_news_metadata(transformed_stories):
-    # Connect to SQLite database (or create it)
-    # Get the directory of this script and construct absolute path to db
+def load_hacker_news_metadata(transformed_stories, story_type):
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     db_path = os.path.join(script_dir, "..", "db", "hacker_news.db")
 
-    # Ensure the db directory exists
     db_dir = os.path.dirname(db_path)
     os.makedirs(db_dir, exist_ok=True)
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
+    cursor.execute(f"DROP TABLE IF EXISTS {story_type};")
+
     cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS stories (
+        f"""
+        CREATE TABLE IF NOT EXISTS {story_type} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             author TEXT,
@@ -35,24 +35,26 @@ def load_hacker_news_metadata(transformed_stories):
         """
     )
 
-    bulk_insert_query = """
-        INSERT INTO stories (title, author, url, points, comments, content, timestamp) VALUES
-    """
-
     for story in transformed_stories:
-        bulk_insert_query += f"""(
-            '{story.get("title")}',
-            '{story.get("author")}',
-            '{story.get("url")}',
-            {story.get("points")},
-            {story.get("comments")},
-            '{story.get("content")}',
-            '{story.get("timestamp")}'
-        ),"""
-
-    bulk_insert_query = bulk_insert_query.rstrip(",") + ";"
-
-    cursor.execute(bulk_insert_query)
+        cursor.execute(
+            f"""
+            INSERT INTO {story_type} (title, author, url, points, comments, content, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                story["title"],
+                story["author"],
+                story["url"],
+                story["points"],
+                story["comments"],
+                story["content"],
+                story["timestamp"],
+            ),
+        )
 
     conn.commit()
     conn.close()
+
+    print(
+        f"[{datetime.now()}] Loaded {len(transformed_stories)} records into {story_type} table."
+    )
