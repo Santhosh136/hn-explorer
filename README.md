@@ -3,7 +3,11 @@
 ## Overview
 
 The Hacker News Metadata ETL Explorer is a comprehensive project that involves extracting, transforming, and loading (ETL) metadata from Hacker News. The project is structured into several key components, including data extraction, transformation, loading into a database, and providing an interactive interface for data exploration.
+
+
 ![Hacker News Explorer](image.png)
+
+
 
 ## Technologies Used
 - Python
