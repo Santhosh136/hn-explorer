@@ -3,6 +3,7 @@
 ## Overview
 
 The Hacker News Metadata ETL Explorer is a comprehensive project that involves extracting, transforming, and loading (ETL) metadata from Hacker News. The project is structured into several key components, including data extraction, transformation, loading into a database, and providing an interactive interface for data exploration.
+![Hacker News Explorer](image.png)
 
 ## Technologies Used
 - Python
@@ -46,3 +47,9 @@ To get started with the Hacker News Metadata ETL Explorer, follow these steps:
    ```bash
    streamlit run app/client/main.py
    ```
+
+## Future Enhancements
+- Implement ETL pipeline in Apache Airflow for better scheduling and monitoring.
+- Use the extracted text content to generate embeddings and store them in a vector database for advanced search capabilities.
+- Feed the embeddings into a large language model (LLM) to enable natural language querying of the Hacker News metadata.
+- Implement user authentication and authorization for secure access to the data.
