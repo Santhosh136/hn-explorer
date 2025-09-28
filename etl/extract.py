@@ -3,12 +3,11 @@
 This module extracts metadata from the Hacker News API.
 """
 
-from config.constants import HN_BASE_URL
 from datetime import datetime
 import requests
 
-FETCH_STORIES_URL = HN_BASE_URL + "{}.json"
-STORY_URL = HN_BASE_URL + "item/{}.json"
+FETCH_STORIES_URL = "https://hacker-news.firebaseio.com/v0/{}.json"
+STORY_URL = "https://hacker-news.firebaseio.com/v0/item/{}.json"
 
 
 def extract_hacker_news_metadata(story_type):

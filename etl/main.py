@@ -1,7 +1,6 @@
-from etl.extract import extract_hacker_news_metadata
-from etl.transform import transform_hacker_news_metadata
-from etl.load import load_hacker_news_metadata
-from config.constants import STORY_TYPES
+from extract import extract_hacker_news_metadata
+from transform import transform_hacker_news_metadata
+from load import load_hacker_news_metadata
 
 
 def etl_process(story_type):
@@ -11,6 +10,6 @@ def etl_process(story_type):
 
 
 if __name__ == "__main__":
-    story_types = STORY_TYPES
+    story_types = ["beststories", "newstories", "jobstories"]
     for story_type in story_types:
         etl_process(story_type)

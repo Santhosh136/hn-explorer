@@ -2,7 +2,6 @@
 This module loads transformed metadata into a relational database.
 """
 
-from config.constants import DB_NAME
 from datetime import datetime
 import sqlite3
 import os
@@ -11,7 +10,7 @@ import os
 def load_hacker_news_metadata(transformed_stories, story_type):
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(script_dir, "..", "db", DB_NAME)
+    db_path = os.path.join(script_dir, "..", "db", "hacker_news.db")
 
     db_dir = os.path.dirname(db_path)
     os.makedirs(db_dir, exist_ok=True)
